@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get a Life Insurance Quote | VeraLife</title>
+  <meta name="description" content="Free life insurance quotes in 60 seconds. Compare 130+ A-rated carriers. No phone calls, no spam." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+      background: #f4f6f9;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    :root {
+      --navy:       #0b1d3a;
+      --navy-light: #13294b;
+      --gold:       #d4a843;
+      --gold-dark:  #b8912e;
+      --gold-light: #f0d78a;
+      --white:      #ffffff;
+      --gray-50:    #f8f9fa;
+      --gray-100:   #eef1f5;
+      --gray-300:   #cbd5e1;
+      --gray-500:   #64748b;
+      --red-500:    #dc2626;
+      --green-500:  #16a34a;
+      --radius:     8px;
+      --shadow:     0 4px 24px rgba(11,29,58,0.10);
+    }
+
+    .form-card {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 640px;
+      overflow: hidden;
+    }
+
+    .form-header {
+      background: var(--navy);
+      color: var(--white);
+      padding: 1.75rem 2rem 1.25rem;
+      text-align: center;
+    }
+    .form-header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .form-header p {
+      font-size: 0.9rem;
+      color: var(--gold-light);
+      margin-top: 0.35rem;
+      opacity: 0.9;
+    }
+    .form-header .gold-accent {
+      display: inline-block;
+      width: 48px;
+      height: 3px;
+      background: var(--gold);
+      border-radius: 2px;
+      margin-top: 0.6rem;
+    }
+
+    .form-body { padding: 1.75rem 2rem 2rem; }
+
+    /* Step indicator */
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .step-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--gray-300);
+      transition: background 0.3s;
+    }
+    .step-dot.active { background: var(--gold); }
+    .step-dot.completed { background: var(--green-500); }
+    .step-connector {
+      width: 48px; height: 2px;
+      background: var(--gray-300);
+      border-radius: 1px;
+      transition: background 0.3s;
+    }
+    .step-connector.completed { background: var(--green-500); }
+    .step-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--gray-500);
+      font-weight: 600;
+      transition: color 0.3s;
+      text-align: center;
+    }
+    .step-label.active { color: var(--navy); }
+    .step-label.completed { color: var(--green-500); }
+
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .progress-row span {
+      font-size: 0.8rem;
+      color: var(--gray-500);
+      font-weight: 500;
+    }
+
+    .field-group { margin-bottom: 1.125rem; }
+    .field-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 0.3rem;
+    }
+    .field-group input,
+    .field-group select {
+      width: 100%;
+      padding: 0.65rem 0.75rem;
+      border: 1.5px solid var(--gray-300);
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      background: var(--white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .field-group input:focus,
+    .field-group select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212,168,67,0.15);
+    }
+    .field-group input.error,
+    .field-group select.error {
+      border-color: var(--red-500);
+    }
+    .field-row {
+      display: flex;
+      gap: 1rem;
+    }
+    .field-row .field-group { flex: 1; }
+
+    .field-error {
+      font-size: 0.75rem;
+      color: var(--red-500);
+      margin-top: 0.2rem;
+      min-height: 1em;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .checkbox-group input[type="checkbox"] {
+      width: auto;
+      margin-top: 0.15rem;
+      accent-color: var(--gold);
+    }
+    .checkbox-group label {
+      font-size: 0.8rem;
+      font-weight: 400;
+      color: var(--gray-500);
+      margin-bottom: 0;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .btn {
+      flex: 1;
+      padding: 0.8rem;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-prev {
+      background: var(--gray-100);
+      color: var(--navy);
+    }
+    .btn-prev:hover { background: #dde2ea; }
+    .btn-next {
+      background: var(--gold);
+      color: var(--navy);
+    }
+    .btn-next:hover { background: var(--gold-dark); }
+    .btn-submit {
+      background: var(--gold);
+      color: var(--navy);
+    }
+    .btn-submit:hover { background: var(--gold-dark); }
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Success state */
+    .success-state { display: none; text-align: center; padding: 2rem; }
+    .success-state.show { display: block; }
+    .success-state .checkmark {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: #dcfce7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+    }
+    .success-state .checkmark svg { width: 32px; height: 32px; color: var(--green-500); }
+    .success-state h2 {
+      font-size: 1.35rem;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+    .success-state p {
+      color: var(--gray-500);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .success-state .email-display {
+      color: var(--gold-dark);
+      font-weight: 600;
+    }
+
+    .error-banner {
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      border-radius: var(--radius);
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: #991b1b;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="form-card" id="app">
+  <div class="form-header">
+    <h1>Get Your Free Quote</h1>
+    <p>Compare 130+ A-rated carriers · 60 seconds · No obligation</p>
+    <div class="gold-accent"></div>
+  </div>
+
+  <div class="form-body" id="formBody">
+    <!-- Step indicator -->
+    <div class="progress-row">
+      <div>
+        <span id="stepDot1" class="step-dot active"></span>
+        <span class="step-connector" id="stepConnector"></span>
+        <span id="stepDot2" class="step-dot"></span>
+      </div>
+      <span id="progressText">Step 1 of 2</span>
+    </div>
+
+    <!-- Step 1: Contact -->
+    <div class="step-panel active" id="step1">
+      <div class="field-row">
+        <div class="field-group">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" placeholder="John" />
+          <div class="field-error" id="firstNameErr"></div>
+        </div>
+        <div class="field-group">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" placeholder="Smith" />
+          <div class="field-error" id="lastNameErr"></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="john@example.com" />
+        <div class="field-error" id="emailErr"></div>
+      </div>
+
+      <div class="field-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" placeholder="(555) 123-4567" />
+        <div class="field-error" id="phoneErr"></div>
+      </div>
+
+      <div class="field-group">
+        <label for="state">Your State</label>
+        <select id="state">
+          <option value="">Select your state</option>
+          <option value="AZ">Arizona</option>
+          <option value="CA">California</option>
+          <option value="CO">Colorado</option>
+          <option value="FL">Florida</option>
+          <option value="GA">Georgia</option>
+          <option value="IL">Illinois</option>
+          <option value="IN">Indiana</option>
+          <option value="MA">Massachusetts</option>
+          <option value="MD">Maryland</option>
+          <option value="ME">Maine</option>
+          <option value="MI">Michigan</option>
+          <option value="NC">North Carolina</option>
+          <option value="NJ">New Jersey</option>
+          <option value="NV">Nevada</option>
+          <option value="NY">New York</option>
+          <option value="OH">Ohio</option>
+          <option value="PA">Pennsylvania</option>
+          <option value="TN">Tennessee</option>
+          <option value="TX">Texas</option>
+          <option value="VA">Virginia</option>
+          <option value="WA">Washington</option>
+        </select>
+        <div class="field-error" id="stateErr"></div>
+      </div>
+
+      <button class="btn btn-next" id="step1Next" style="width:100%;margin-top:0.5rem;">
+        Continue →
+      </button>
+    </div>
+
+    <!-- Step 2: Coverage -->
+    <div class="step-panel" id="step2">
+      <div class="field-row">
+        <div class="field-group">
+          <label for="age">Your Age</label>
+          <input type="number" id="age" placeholder="35" min="18" max="85" />
+          <div class="field-error" id="ageErr"></div>
+        </div>
+        <div class="field-group">
+          <label for="coverageType">Coverage Type</label>
+          <select id="coverageType">
+            <option value="">Select type</option>
+            <option value="term">Term Life</option>
+            <option value="whole">Whole Life</option>
+            <option value="iul">Indexed Universal Life (IUL)</option>
+          </select>
+          <div class="field-error" id="coverageTypeErr"></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label for="tobacco">Tobacco / Nicotine Use</label>
+        <select id="tobacco">
+          <option value="">Select</option>
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+          <option value="former">Former (quit 12+ months)</option>
+        </select>
+        <div class="field-error" id="tobaccoErr"></div>
+      </div>
+
+      <div class="field-group">
+        <label for="coverageAmount">Desired Coverage Amount</label>
+        <select id="coverageAmount">
+          <option value="">Select amount</option>
+          <option value="50000">$50,000</option>
+          <option value="100000">$100,000</option>
+          <option value="250000">$250,000</option>
+          <option value="500000">$500,000</option>
+          <option value="1000000">$1,000,000</option>
+          <option value="2000000">$2,000,000</option>
+          <option value="5000000">$5,000,000</option>
+        </select>
+        <div class="field-error" id="coverageAmountErr"></div>
+      </div>
+
+      <div class="checkbox-group">
+        <input type="checkbox" id="consent" />
+        <label for="consent">
+          I agree to be contacted regarding insurance quotes and understand that
+          VeraLife may reach out via phone, email, or SMS. Your information is
+          never shared or sold.
+        </label>
+      </div>
+      <div class="field-error" id="consentErr"></div>
+
+      <div class="btn-row">
+        <button class="btn btn-prev" id="step2Prev">← Back</button>
+        <button class="btn btn-submit" id="submitBtn">Get My Quote</button>
+      </div>
+    </div>
+
+    <!-- Error banner -->
+    <div class="error-banner" id="errorBanner" style="display:none;"></div>
+  </div>
+
+  <!-- Success -->
+  <div class="success-state" id="successState">
+    <div class="checkmark">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+      </svg>
+    </div>
+    <h2>Thanks, <span id="successName"></span>!</h2>
+    <p>
+      We received your request. A quote will be sent to
+      <span class="email-display" id="successEmail"></span>.
+    </p>
+    <p style="margin-top:0.75rem;">
+      One of our licensed agents may follow up to help find the best rate.
+    </p>
+  </div>
+</div>
+
+<script>
+  (function () {
+    'use strict';
+
+    const CAPTURE_URL = 'https://leads.vera-leads.com/api/leads';
+
+    // Field refs
+    const $ = (id) => document.getElementById(id);
+    const fields = {
+      firstName:    { el: $('firstName'),    err: $('firstNameErr') },
+      lastName:     { el: $('lastName'),     err: $('lastNameErr') },
+      email:        { el: $('email'),        err: $('emailErr') },
+      phone:        { el: $('phone'),        err: $('phoneErr') },
+      state:        { el: $('state'),        err: $('stateErr') },
+      age:          { el: $('age'),          err: $('ageErr') },
+      coverageType: { el: $('coverageType'), err: $('coverageTypeErr') },
+      tobacco:      { el: $('tobacco'),      err: $('tobaccoErr') },
+      coverageAmount:{el: $('coverageAmount'),err: $('coverageAmountErr') },
+      consent:      { el: $('consent'),      err: $('consentErr') },
+    };
+
+    const step1Fields = ['firstName','lastName','email','phone','state'];
+    const step2Fields = ['age','coverageType','tobacco','coverageAmount','consent'];
+
+    const step1 = $('step1'), step2 = $('step2');
+    const dot1 = $('stepDot1'), dot2 = $('stepDot2'), connector = $('stepConnector');
+    const progressText = $('progressText');
+    const errorBanner = $('errorBanner');
+
+    // Validation
+    const validators = {
+      firstName(v) {
+        if (!v.trim()) return 'First name is required.';
+        if (v.trim().length < 2) return 'First name must be at least 2 characters.';
+        return '';
+      },
+      lastName(v) {
+        if (!v.trim()) return 'Last name is required.';
+        if (v.trim().length < 2) return 'Last name must be at least 2 characters.';
+        return '';
+      },
+      email(v) {
+        if (!v.trim()) return 'Email is required.';
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())) return 'Enter a valid email address.';
+        return '';
+      },
+      phone(v) {
+        if (!v.trim()) return 'Phone number is required.';
+        const digits = v.replace(/\D/g, '');
+        if (digits.length < 10 || digits.length > 11) return 'Enter a valid 10-digit phone number.';
+        return '';
+      },
+      state(v) { if (!v) return 'Select your state.'; return ''; },
+      age(v) {
+        if (!v) return 'Age is required.';
+        const n = parseInt(v, 10);
+        if (isNaN(n) || n < 18 || n > 85) return 'Age must be between 18 and 85.';
+        return '';
+      },
+      coverageType(v) { if (!v) return 'Select coverage type.'; return ''; },
+      tobacco(v) { if (!v) return 'Select tobacco/nicotine status.'; return ''; },
+      coverageAmount(v) { if (!v) return 'Select coverage amount.'; return ''; },
+      consent(v) { if (!v) return 'You must agree to the terms.'; return ''; },
+    };
+
+    function validateField(name) {
+      const f = fields[name];
+      if (!f) return true;
+      const value = f.el.type === 'checkbox' ? f.el.checked : f.el.value;
+      const msg = validators[name](value);
+      f.err.textContent = msg;
+      f.el.classList.toggle('error', !!msg);
+      return !msg;
+    }
+
+    function validateFields(list) {
+      let ok = true;
+      list.forEach(function (n) { if (!validateField(n)) ok = false; });
+      return ok;
+    }
+
+    // Real-time validation
+    Object.keys(fields).forEach(function (name) {
+      const f = fields[name];
+      f.el.addEventListener('blur', function () { validateField(name); });
+      f.el.addEventListener('input', function () {
+        if (f.el.classList.contains('error')) validateField(name);
+      });
+      f.el.addEventListener('change', function () {
+        if (f.el.classList.contains('error')) validateField(name);
+      });
+    });
+
+    // Phone formatting
+    fields.phone.el.addEventListener('input', function () {
+      let d = this.value.replace(/\D/g, '').slice(0, 10);
+      if (d.length === 0)      { this.value = ''; return; }
+      if (d.length <= 3)       this.value = '(' + d;
+      else if (d.length <= 6)  this.value = '(' + d.slice(0,3) + ') ' + d.slice(3);
+      else                     this.value = '(' + d.slice(0,3) + ') ' + d.slice(3,6) + '-' + d.slice(6);
+    });
+
+    // Age guard
+    fields.age.el.addEventListener('input', function () {
+      this.value = this.value.replace(/\D/g, '').slice(0, 2);
+      const n = parseInt(this.value, 10);
+      if (n > 85) this.value = '85';
+      if (this.value === '0') this.value = '';
+    });
+
+    function showStep(step) {
+      if (step === 1) {
+        step1.classList.add('active');
+        step2.classList.remove('active');
+        dot1.className = 'step-dot active';
+        dot2.className = 'step-dot';
+        connector.className = 'step-connector';
+        progressText.textContent = 'Step 1 of 2';
+      } else {
+        step1.classList.remove('active');
+        step2.classList.add('active');
+        dot1.className = 'step-dot completed';
+        dot2.className = 'step-dot active';
+        connector.className = 'step-connector completed';
+        progressText.textContent = 'Step 2 of 2';
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    $('step1Next').addEventListener('click', function () {
+      errorBanner.style.display = 'none';
+      if (validateFields(step1Fields)) showStep(2);
+    });
+
+    $('step2Prev').addEventListener('click', function () {
+      showStep(1);
+    });
+
+    // Submit
+    $('submitBtn').addEventListener('click', async function () {
+      if (!validateFields(step2Fields)) return;
+      errorBanner.style.display = 'none';
+
+      const btn = this;
+      const payload = {
+        firstName:   fields.firstName.el.value.trim(),
+        lastName:    fields.lastName.el.value.trim(),
+        email:       fields.email.el.value.trim(),
+        phone:       fields.phone.el.value.replace(/\D/g, ''),
+        state:       fields.state.el.value,
+        age:         parseInt(fields.age.el.value, 10),
+        coverageType:fields.coverageType.el.value,
+        tobacco:     fields.tobacco.el.value,
+        consent:     fields.consent.el.checked,
+        coverageAmount: parseInt(fields.coverageAmount.el.value, 10),
+        source:      'gh-pages-form',
+        capturedAt:  new Date().toISOString(),
+      };
+
+      btn.disabled = true;
+      btn.textContent = 'Submitting…';
+
+      try {
+        const res = await fetch(CAPTURE_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+
+        if (data.ok || data.leadId) {
+          // Show success
+          $('formBody').style.display = 'none';
+          $('successName').textContent = payload.firstName;
+          $('successEmail').textContent = payload.email;
+          $('successState').classList.add('show');
+        } else {
+          throw new Error(data.error || 'Submission failed');
+        }
+      } catch (err) {
+        console.error('[VeraLeadCapture] Error:', err.message);
+        btn.disabled = false;
+        btn.textContent = 'Retry';
+        errorBanner.textContent = 'Submission failed. Please check your information and try again.';
+        errorBanner.style.display = 'block';
+      }
+    });
+  })();
+</script>
+</body>
+</html>
