@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://klovell1986-hub.github.io/veralife-landing-page/blog/sitemap.xml
