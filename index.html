@@ -381,6 +381,9 @@
         <div class="field-error" id="coverageAmountErr"></div>
       </div>
 
+      <input type="hidden" id="healthClass" value="standard" />
+      <input type="hidden" id="incomeBracket" value="low" />
+
       <div class="checkbox-group">
         <input type="checkbox" id="consent" />
         <label for="consent">
@@ -436,6 +439,8 @@
       age:          { el: $('age'),          err: $('ageErr') },
       coverageType: { el: $('coverageType'), err: $('coverageTypeErr') },
       tobacco:      { el: $('tobacco'),      err: $('tobaccoErr') },
+      healthClass:  { el: $('healthClass'),  err: null },
+      incomeBracket:{ el: $('incomeBracket'),err: null },
       coverageAmount:{el: $('coverageAmount'),err: $('coverageAmountErr') },
       consent:      { el: $('consent'),      err: $('consentErr') },
     };
@@ -573,6 +578,8 @@
         coverageType:fields.coverageType.el.value,
         tobacco:     fields.tobacco.el.value,
         consent:     fields.consent.el.checked,
+        healthClass:  fields.healthClass.el.value,
+        incomeBracket: fields.incomeBracket.el.value,
         coverageAmount: parseInt(fields.coverageAmount.el.value, 10),
         source:      'gh-pages-form',
         capturedAt:  new Date().toISOString(),
